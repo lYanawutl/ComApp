@@ -2,28 +2,35 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Alert, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { colors, TOP_INSET } from "./src/theme";
+import { QUOTE } from "./src/data";
 
 export default function App() {
+  const [quote, setQuote] = useState('');
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    Alert.alert("Warning⚠️", "สวัสดี โมโต");
-  }, []);
+    //console.log(Quote[Math.floor(Math.random() * Quote.length)]);
+    setQuote(QUOTE[Math.floor(Math.random() * QUOTE.length)]);
+    console.log(quote);
+  }, [count]);
 
   return (
-    <View style={styles.container}>
-      <Text>count: {count}</Text>
-      <TouchableOpacity
-        style={[styles.btn]}
-        onPress={() => {
-          setCount(count + 1);
-          console.log("UP");
-        }}
-      >
-        <Text style={styles.btnText}>+ เพิ่ม</Text>
-      </TouchableOpacity>
-
-      <StatusBar style="auto" />
+    <View style={styles.root}>
+      <View style={[styles.header, {paddingTop: TOP_INSET + 10}]}>
+          <Text style={styles.title}>คำคม สดๆร้อนๆ</Text>
+      </View>
+      <View style={styles.container}>
+        <View style={[styles.card, styles.stable]}>
+          <Text style={styles.cardHead}>ทำงานครั้งเดียวตอนเริ่ม</Text>
+          <Text style={styles.row}>คำคมประจำวัน:</Text>
+          <Text style={styles.quote}>{ quote}</Text>
+          <Text style={styles.note}>กด re-reder แล้วยังไม่เปลี่ยน</Text>
+        </View>
+        <Text style={styles.count}>จำนวนครั้งที่ re-render: {count} </Text>
+        <TouchableOpacity style={styles.btn} onPress={() => setCount(count + 1)}>
+          <Text style={styles.textBtn}>Re-Render</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
