@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
 
-// ========== ใบงาน ข้อ 1: Counter (number) ==========
 export default function Ex1Counter({ navigation }) {
-  // ===== STATE เติมเอง() =====
-  // (1) ประกาศ state ชื่อ count ชนิดตัวเลข ค่าเริ่มต้น 0 ได้ทั้ง( count และ setCount)
+
   const [counter, setCounter] = useState(0);
 
   return (

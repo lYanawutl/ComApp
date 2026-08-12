@@ -1,6 +1,6 @@
 import { StatusBar, Platform } from "react-native";
 
-export const color = {
+export const colors = {
   bg: "#0d1117",
   surface: "#161d22",
   border: "#30363d",
@@ -8,6 +8,8 @@ export const color = {
   muted: "#8b949e",
   cyan: "#61dafb",
   heart: "#f778ba",
+  green: "#238636",
+  amber: "#f2cc60",
 };
 
 export const TOP_INSET =
