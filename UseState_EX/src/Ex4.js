@@ -7,12 +7,10 @@ export default function Ex4ProfileForm({ navigation }) {
   // (1) ประกาศ state ชื่อ form เป็นออบเจกต์ { firstName: '', lastName: '', age: '' }
   const [form, setForm] = useState({ firstName: "", lastName: "", age: "" });
   // (2) ฟังก์ชัน updateField(key, value): อัปเดตทีละฟิลด์
-
   // ข้อควรระวัง: ต้อง spread ...form เสมอ => setForm({ ...form, [key]: value })
   const updateField = (key, value) => {
     setForm({ ...form, [key]: value });
   };
-
   return (
     <View style={s.container}>
       <Field
@@ -31,7 +29,6 @@ export default function Ex4ProfileForm({ navigation }) {
         keyboardType="numeric"
         onChangeText={(Text) => updateField("age", Text)}
       />
-
       <View style={s.preview}>
         <Text style={s.previewLabel}>ตัวอย่างข้อมูล</Text>
 
@@ -45,7 +42,6 @@ export default function Ex4ProfileForm({ navigation }) {
     </View>
   );
 }
-
 function Field({ label, ...props }) {
   return (
     <View style={{ gap: 6 }}>

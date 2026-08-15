@@ -3,9 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, TouchableOpacity } from 'react-native';
 
 const CounterScreen = () => {
-    //let counter = 0;
     const [counter, setCounter] = useState(0)
-    //setCounter => counter = counter+1
 
     return (
         <View style={styles.container}>
