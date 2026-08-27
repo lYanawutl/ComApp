@@ -28,6 +28,16 @@ const TodoScreen = () => {
     setText("");
   };
 
+  const toggleTodo = (id) =>
+    setTodos((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, done: !task.done } : task,
+      ),
+    );
+
+  const deleteTodo = (id) =>
+    setTodos((prev) => prev.filter((task) => task.id !== id));
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Todo Screen</Text>
@@ -50,8 +60,11 @@ const TodoScreen = () => {
           <TouchableOpacity
             style={styles.item}
             onPress={() => toggleTodo(item.id)}
+            onLongPress={() => deleteTodo(item.id)}
           >
-            <Text style={styles.itemText}>{item.text}</Text>
+            <Text style={[styles.itemText, item.done && styles.itemDone]}>
+              {item.text}
+            </Text>
           </TouchableOpacity>
         )}
       />
