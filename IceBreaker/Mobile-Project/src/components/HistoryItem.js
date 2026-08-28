@@ -1,38 +1,19 @@
-<<<<<<< HEAD
-=======
 import React from "react";
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
 import { View, Text, StyleSheet } from "react-native";
 import { colors } from "../theme";
 
 export default function HistoryItem({ text, number }) {
   return (
-<<<<<<< HEAD
-    <View style={styles.item}>
-      <Text style={styles.number}>{number}.</Text>
-=======
     <View style={styles.row}>
       <View style={styles.badge}>
         <Text style={styles.numTxt}>{number}</Text>
       </View>
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
       <Text style={styles.text}>{text}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  item: {
-    flexDirection: "row",
-    gap: 8,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  number: { color: colors.muted, fontSize: 14 },
-  text: { color: colors.text, fontSize: 14, flex: 1 },
-=======
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -53,5 +34,4 @@ const styles = StyleSheet.create({
   },
   numTxt: { fontSize: 13, fontWeight: "700", color: colors.text },
   text: { flex: 1, fontSize: 15, color: colors.bg, lineHeight: 22 },
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
 });

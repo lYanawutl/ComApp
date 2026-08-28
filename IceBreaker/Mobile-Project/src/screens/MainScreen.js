@@ -8,22 +8,13 @@ import {
 } from "react-native";
 import { QUESTIONS } from "../data";
 import { colors } from "../theme";
-<<<<<<< HEAD
-import HistoryItem from "../components/HistoryITem";
-=======
 import HistoryItem from "../components/HistoryItem";
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
 
 // ========== หน้าหลัก (ต้องทำ) ==========
 export default function MainScreen() {
   // TODO 1: สร้าง state — current (คำถามที่แสดงตอนนี้) และ history (array คำถามที่สุ่มมาแล้ว)
-<<<<<<< HEAD
-  const [current, setCurrent] = useState('');
-  const [history, setHistory] = useState('');
-=======
   const [current, setCurrent] = useState(""); // คำถามที่แสดงอยู่ตอนนี้
   const [history, setHistory] = useState([]);
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
 
   // TODO 2: ฟังก์ชัน pickRandom()
   //   - สุ่ม 1 คำถามจาก QUESTIONS
@@ -33,10 +24,7 @@ export default function MainScreen() {
     setCurrent(q);
     setHistory((prev) => [q, ...prev]);
   };
-<<<<<<< HEAD
-=======
   const clearHistory = () => setHistory([]);
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
 
   // TODO 3: useEffect ที่มี [] — ตอนเข้าหน้าให้สุ่มคำถามแรกอัตโนมัติ (ทำครั้งเดียว)
   useEffect(() => {
@@ -46,22 +34,6 @@ export default function MainScreen() {
   return (
     <View style={styles.container}>
       {/* TODO 4: แสดง current เป็นข้อความใหญ่ตรงกลาง */}
-<<<<<<< HEAD
-      <View style={styles.container}>
-        <View style={styles.Card}>
-          <Text style={styles.Questions}>{current}</Text>
-        </View>
-        {/* TODO 5: ปุ่ม "สุ่มใหม่" กดแล้วเรียก pickRandom */}
-        <TouchableOpacity style={styles.btn} onPress={pickRandom}>
-          <Text style={styles.Textbtn}>Random</Text>
-        </TouchableOpacity>
-      </View>
-      {/* TODO 6: FlatList แสดง history โดยใช้ component HistoryItem ที่สร้างเอง */}
-      <FlatList
-        style={{ width: "100%" }}
-        data={history}
-        keyExtractor={(item, index) => index.toString()}
-=======
       <View style={styles.card}>
         <Text style={styles.question}>{current}</Text>
       </View>
@@ -84,7 +56,6 @@ export default function MainScreen() {
         data={history}
         keyExtractor={(item, index) => String(index)}
         contentContainerStyle={styles.listContent}
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
         renderItem={({ item, index }) => (
           <HistoryItem text={item} number={history.length - index} />
         )}
@@ -92,48 +63,6 @@ export default function MainScreen() {
     </View>
   );
 }
-<<<<<<< HEAD
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, gap: 16 },
-  placeholder: {
-    color: colors.muted,
-    fontSize: 16,
-    textAlign: "center",
-    marginTop: 40,
-  },
-  // TODO: เพิ่ม style ของ current / ปุ่ม / list ตามต้องการ
-  btn: {
-    backgroundColor: colors.green,
-    borderColor: colors.border,
-    borderRadius: 5,
-    borderWidth: 2,
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-  },
-  Textbtn: {
-    color: colors.text,
-    fontSize: 20,
-    fontWeight: "700",
-  },
-  Questions: {
-    color: colors.purple,
-    fontSize: 18,
-    fontWeight: "600",
-    padding: 2,
-  },
-  Card: {
-    borderRadius: 14,
-    borderWidth: 2,
-    backgroundColor: colors.border,
-    padding: 16,
-    gap: 6,
-  },
-  Text: {
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#ffff",
-=======
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: colors.bg },
@@ -176,6 +105,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22,
     marginBottom: 8,
->>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   },
 });

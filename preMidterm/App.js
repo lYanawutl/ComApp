@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Alert, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { colors, TOP_INSET } from "./src/theme";
+<<<<<<< HEAD
 import { QUOTE } from "./src/data";
 
 export default function App() {
@@ -34,6 +35,32 @@ export default function App() {
           <Text style={styles.textBtn}>Re-Render</Text>
         </TouchableOpacity>
       </View>
+=======
+import Quotes from "./src/components/Quotes";
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [quote, setQuote] = useState("");
+
+  useEffect(() => {
+    Alert.alert("Warning⚠️", "สวัสดี โมโต");
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>count: {count}</Text>
+      <TouchableOpacity
+        style={[styles.btn]}
+        onPress={() => {
+          setCount(count + 1);
+          console.log("UP");
+        }}
+      >
+        <Text style={styles.btnText}>+ เพิ่ม</Text>
+      </TouchableOpacity>
+
+      <StatusBar style="auto" />
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
     </View>
   );
 }

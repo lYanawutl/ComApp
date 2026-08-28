@@ -16,7 +16,10 @@ export default function Ex5TodoList({ navigation }) {
   const [text, setText] = useState("");
   // (2) state ชื่อ todos ชนิดอาเรย์ เริ่มต้น []
   const [todos, setTodos] = useState([]);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   // (3) addTodo: เพิ่มงานใหม่โดยไม่แก้อาเรย์เดิม แล้วล้างช่อง text
   const addTodo = () => {
     if (text.trim() == "") return;
@@ -24,19 +27,29 @@ export default function Ex5TodoList({ navigation }) {
     setTodos([...todos, newItem]);
     setText("");
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   // (4) removeTodo(id): ลบด้วย todos.filter(...)
   const removeTodo = (id) => {
     setTodos(todos.filter((t) => t.id !== id));
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   // (5) toggleDone(id): สลับ done ของ item ที่ตรง id
   const toggleDone = (id) => {
     setTodos(todos.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
   };
+<<<<<<< HEAD
 
   const doneCount = todos.filter((t) => t.done).length;
 
+=======
+  const doneCount = todos.filter((t) => t.done).length;
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   return (
     <View style={s.container}>
       <View style={s.inputRow}>
@@ -52,11 +65,17 @@ export default function Ex5TodoList({ navigation }) {
           <Text style={s.addBtnText}>เพิ่ม</Text>
         </TouchableOpacity>
       </View>
+<<<<<<< HEAD
 
       <Text style={s.counter}>
         ทั้งหมด {todos.length} รายการ เสร็จแล้ว {doneCount}
       </Text>
 
+=======
+      <Text style={s.counter}>
+        ทั้งหมด {todos.length} รายการ เสร็จแล้ว {doneCount}
+      </Text>
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
       <FlatList
         data={todos}
         keyExtractor={(item) => item.id}

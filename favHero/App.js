@@ -8,13 +8,19 @@ import { useState } from "react";
 export default function App() {
   const [tab, setTab] = useState("AllHeroes");
   const [favorite, setFavorite] = useState([]);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   const toggle = (id) => {
     setFavorite((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   return (
     <View style={styles.root}>
       <ExpoStstusBar style="light" />

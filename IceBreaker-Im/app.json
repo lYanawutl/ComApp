@@ -1,0 +1,4 @@
+{ "expo": { "name": "icebreaker", "slug": "icebreaker", "version": "1.0.0",
+  "orientation": "portrait", "userInterfaceStyle": "dark", "newArchEnabled": true,
+  "splash": { "backgroundColor": "#0d1117" }, "ios": { "supportsTablet": true },
+  "android": { "adaptiveIcon": { "backgroundColor": "#0d1117" } } } }

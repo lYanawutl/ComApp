@@ -7,12 +7,18 @@ export default function Ex4ProfileForm({ navigation }) {
   // (1) ประกาศ state ชื่อ form เป็นออบเจกต์ { firstName: '', lastName: '', age: '' }
   const [form, setForm] = useState({ firstName: "", lastName: "", age: "" });
   // (2) ฟังก์ชัน updateField(key, value): อัปเดตทีละฟิลด์
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   // ข้อควรระวัง: ต้อง spread ...form เสมอ => setForm({ ...form, [key]: value })
   const updateField = (key, value) => {
     setForm({ ...form, [key]: value });
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
   return (
     <View style={s.container}>
       <Field
@@ -31,7 +37,10 @@ export default function Ex4ProfileForm({ navigation }) {
         keyboardType="numeric"
         onChangeText={(Text) => updateField("age", Text)}
       />
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
       <View style={s.preview}>
         <Text style={s.previewLabel}>ตัวอย่างข้อมูล</Text>
 
@@ -45,7 +54,10 @@ export default function Ex4ProfileForm({ navigation }) {
     </View>
   );
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 270da913024f0a2f496dbe642f4d2820a59d1243
 function Field({ label, ...props }) {
   return (
     <View style={{ gap: 6 }}>
