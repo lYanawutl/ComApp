@@ -1,12 +1,9 @@
-import { Platform, StatusBar } from "react-native";
+import { Platform, StatusBar } from 'react-native';
 
-// คำนวณระยะขอบปลอดภัยด้านบนเอง โดยไม่ใช้ react-native-safe-area-context
-// iOS      : เผื่อ notch / Dynamic Island
-// Android  : ใช้ความสูงของแถบสถานะจริง แล้วบวกระยะหายใจอีกเล็กน้อย
 export const TOP_INSET = Platform.select({
-  ios: 56,
+  ios: 56, // เผื่อ notch
   android: (StatusBar.currentHeight ?? 24) + 10,
-  default: 24,
+  default: 24, // สำหรับเว็บ
 });
 
 export const BOTTOM_INSET = Platform.select({

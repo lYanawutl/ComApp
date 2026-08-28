@@ -1,6 +1,6 @@
-import { StatusBar } from "expo-status-bar";
-import { COLORS } from "./src/constants/colors";
-import TodoScreen from "./src/screens/TodoScreen";
+import { StatusBar } from 'react-native';
+import TodoScreen from './src/screens/TodoScreen';
+import { COLORS } from './src/constants/colors';
 
 export default function App() {
   return (
