@@ -10,13 +10,13 @@ export async function initDB(db) {
             username TEXT NOT NULL UNIQUE,
             password_salt TEXT NOT NULL,
             password_hash TEXT NOT NULL,
-            create_at TEXT NOT NULL,    
+            create_at TEXT NOT NULL
         );
     `);
-};
+}
 
 export function liststudents(db) {
   return db.getAllAsync(
     `SELECT id, name, surname, student_id, username, substr(password_hash, 1, 16) AS hash_review FROM students ORDER BY id DESC`,
   );
-};
+}

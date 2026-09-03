@@ -1,18 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import RegisterScreen from './src/screens/RegisterScreen';
+import { SQLiteProvider } from "expo-sqlite";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { colors } from "./src/styles/theme";
+import { DATABASE_NAME, initDB } from "./src/db/database";
 
 export default function App() {
   return (
-    <RegisterScreen/>
+    <SQLiteProvider databaseName={DATABASE_NAME} onInit={initDB}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.container}>
+        <Text style={{ color: colors.green, fontSize: 18 }}>
+          ฐานข้อมูลพร้อมแล้ว
+        </Text>
+      </View>
+    </SQLiteProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
