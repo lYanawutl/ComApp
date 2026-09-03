@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-  HTMLInputElementText: {
+  hintText: {
     color: colors.dim,
     fontSize: 12,
     marginTop: 5,
