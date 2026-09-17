@@ -2,8 +2,6 @@ import { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  TextInput,
   Pressable,
   Alert,
   Platform,
@@ -11,11 +9,10 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
-import { styles } from "../styles/registerStyles";
-import { colors } from "../styles/theme";
 import Field from "../components/Field";
-import { validateFrom, hasErrors } from "../utils/validate";
+import { styles } from "../styles/registerStyles";
 import { registerStudent } from "../db/database";
+import { validateFrom, hasErrors } from "../utils/validate";
 
 const EMPTY_FORM = {
   name: "",
@@ -26,7 +23,7 @@ const EMPTY_FORM = {
   confirm: "",
 };
 
-const RegisterScreen = ({ onRegistered }) => {
+const RegisterScreen = ({ onReg }) => {
   const db = useSQLiteContext();
 
   const [form, setForm] = useState(EMPTY_FORM);
@@ -47,6 +44,7 @@ const RegisterScreen = ({ onRegistered }) => {
   }
 
   async function handleSubmit() {
+    if (saving) return;
     setSuccess("");
 
     const found = validateFrom(form);
@@ -56,27 +54,31 @@ const RegisterScreen = ({ onRegistered }) => {
     }
 
     setSaving(true);
+    try {
+      const result = await registerStudent(db, {
+        name: form.name.trim(),
+        surname: form.surname.trim(),
+        studentId: form.studentID.trim(),
+        username: form.username.trim(),
+        password: form.password,
+      });
 
-    const result = await registerStudent(db, {
-      name: form.name.trim(),
-      surname: form.surname.trim(),
-      studentID: form.studentID.trim(),
-      username: form.username.trim(),
-      password: form.password.trim(),
-    });
+      if (!result.ok) {
+        if (result.field) setError({ [result.field]: result.message });
+        else Alert.alert("ผิดพลาด", result.message);
+        return;
+      }
 
-    setSaving(false);
-
-    if (!result.ok) {
-      if (result.field) setError({ [result.field]: result.message });
-      else Alert.alert("ผิดพลาด", result.message);
-      return;
+      setForm(EMPTY_FORM);
+      setError({});
+      setSuccess(`ลงทะเบียนสำเร็จ หมายเลขในระบบคือ ${result.id}`);
+      onReg?.();
+    } catch (e) {
+      console.warn(e);
+      Alert.alert("ผิดพลาด", "เกิดข้อผิดพลาด กรุณาลองใหม่");
+    } finally {
+      setSaving(false);
     }
-
-    setForm(EMPTY_FORM);
-    setError({});
-    setSuccess(`ลงทะเบียนสำเร็จ หมายเลขในระบบคือ ${result.id}`);
-    onRegistered?.();
   }
 
   return (
@@ -128,7 +130,7 @@ const RegisterScreen = ({ onRegistered }) => {
           value={form.username}
           onChangeText={(v) => setField("username", v)}
           error={error.username}
-          placeholder="somchi"
+          placeholder="somchai"
           hint="ห้ามซ้ำกับผู้ใช้คนอื่น"
           autoCapitalize="none"
           maxLength={20}
@@ -155,9 +157,10 @@ const RegisterScreen = ({ onRegistered }) => {
         <Pressable
           style={[styles.submit, saving && styles.submitDisabled]}
           onPress={handleSubmit}
+          disabled={saving}
         >
           <Text style={styles.submitText}>
-            {saving ? "กำลังบันทึก" : "ลงทะเบียน"}
+            {saving ? "กำลังบันทึก..." : "ลงทะเบียน"}
           </Text>
         </Pressable>
       </ScrollView>

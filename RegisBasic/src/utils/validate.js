@@ -1,4 +1,4 @@
-export function validateForm({
+export function validateFrom({
   name,
   surname,
   studentID,

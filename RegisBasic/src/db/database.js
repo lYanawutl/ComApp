@@ -12,7 +12,6 @@ async function hashPassword(password, salt) {
 export async function initDB(db) {
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
-
     CREATE TABLE IF NOT EXISTS students (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -21,16 +20,17 @@ export async function initDB(db) {
       username TEXT NOT NULL UNIQUE,
       password_salt TEXT NOT NULL,
       password_hash TEXT NOT NULL,
-      created_at TEXT NOT NULL
+      create_at TEXT NOT NULL
     );
   `);
 }
 
-export function listStudents(db) {
+export function liststudents(db) {
   return db.getAllAsync(
     `SELECT id, name, surname, student_id, username,
             substr(password_hash, 1, 16) AS hash_preview
-     FROM students ORDER BY id DESC`,
+     FROM students
+     ORDER BY id DESC`,
   );
 }
 
@@ -47,9 +47,9 @@ export async function findDuplicate(db, studentID, username) {
 
 export async function registerStudent(
   db,
-  { name, surname, studentID, username, password },
+  { name, surname, studentId, username, password },
 ) {
-  const duplicate = await findDuplicate(db, studentID, username);
+  const duplicate = await findDuplicate(db, studentId, username);
 
   if (duplicate === "studentID") {
     return {
@@ -58,7 +58,6 @@ export async function registerStudent(
       message: "รหัสนิสิตนี้ลงทะเบียนไปแล้ว",
     };
   }
-
   if (duplicate === "username") {
     return {
       ok: false,
@@ -72,14 +71,13 @@ export async function registerStudent(
 
   try {
     const result = await db.runAsync(
-      `INSERT INTO students (
-        name, surname, student_id, username,
-        password_salt, password_hash, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO students
+        (name, surname, student_id, username, password_salt, password_hash, create_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         surname,
-        studentID,
+        studentId,
         username,
         salt,
         hash,
@@ -93,7 +91,7 @@ export async function registerStudent(
   }
 }
 
-export async function countStudents(db) {
+export async function countStudent(db) {
   const row = await db.getFirstAsync("SELECT COUNT(*) AS n FROM students");
   return row?.n ?? 0;
 }

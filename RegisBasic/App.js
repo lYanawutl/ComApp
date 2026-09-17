@@ -1,59 +1,71 @@
 import { useState } from "react";
+import { Text, View, TouchableOpacity, StatusBar } from "react-native";
 import { SQLiteProvider } from "expo-sqlite";
-import { StyleSheet, Text, View, StatusBar, Pressable } from "react-native";
 import { DATABASE_NAME, initDB } from "./src/db/database";
 import RegisterScreen from "./src/screens/RegisterScreen";
-import { colors } from "./src/styles/theme";
-import { styles } from "./src/styles/appStyles";
 import StudentListScreen from "./src/screens/StudentListScreen";
+import { styles } from "./src/styles/appStyles";
 
+// App มีแค่ SQLiteProvider ไม่มี state
 export default function App() {
-  const [tab, setTab] = useState("register");
+  return (
+    <SQLiteProvider databaseName={DATABASE_NAME} onInit={initDB}>
+      <StatusBar barStyle="light-content" />
+      <Main />
+    </SQLiteProvider>
+  );
+}
 
+// state ทั้งหมดอยู่ที่นี่ กดแท็บแล้วจะ render ใหม่แค่ส่วนนี้
+function Main() {
+  const [tab, setTab] = useState("register");
   const [reloadKey, setReloadKey] = useState(0);
 
+  function go(t) {
+    setTab(t);
+    if (t === "list") setReloadKey((k) => k + 1);
+  }
+
   return (
-    <>
-      <SQLiteProvider databaseName={DATABASE_NAME} onInit={initDB}>
-        <StatusBar barStyle="light-content" />
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.title}>ระบบลงทะเบียนนิสิต</Text>
-          </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>ระบบลงทะเบียนนิสิต</Text>
+      </View>
 
-          <View style={styles.tabs}>
-            <TabButton
-              label={"ลงทะเบียน"}
-              active={tab === "register"}
-              onPress={() => setTab("register")}
-            />
-            <TabButton
-              label={"รายชื่อ"}
-              active={tab === "list"}
-              onPress={() => setTab("list")}
-            />
-          </View>
+      <View style={styles.tabs}>
+        <TabButton
+          label="ลงทะเบียน"
+          active={tab === "register"}
+          onPress={() => go("register")}
+        />
+        <TabButton
+          label="รายชื่อ"
+          active={tab === "list"}
+          onPress={() => go("list")}
+        />
+      </View>
 
-          {tab === "register" ? (
-            <RegisterScreen onRegistered={() => setReloadKey((k) => k + 1)} />
-          ) : (
-            <StudentListScreen reloadKey={reloadKey} />
-          )}
-        </View>
-      </SQLiteProvider>
-    </>
+      <View style={{ flex: 1 }}>
+        {tab === "register" ? (
+          <RegisterScreen onReg={() => setReloadKey((k) => k + 1)} />
+        ) : (
+          <StudentListScreen reloadKey={reloadKey} />
+        )}
+      </View>
+    </View>
   );
 }
 
 function TabButton({ label, active, onPress }) {
   return (
-    <Pressable
-      style={[styles.tab, active && styles.tabActive]}
+    <TouchableOpacity
+      activeOpacity={0.7}
       onPress={onPress}
+      style={[styles.tab, active && styles.tabActive]}
     >
       <Text style={[styles.tabText, active && styles.tabTextActive]}>
         {label}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }

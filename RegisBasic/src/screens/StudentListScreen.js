@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList, Pressable, Alert } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
-
-import { listStudents, clearStudents } from "../db/database";
+import { liststudents, clearStudents } from "../db/database";
 import { styles } from "../styles/studentListStyles";
 
 export default function StudentListScreen({ reloadKey }) {
@@ -10,7 +9,7 @@ export default function StudentListScreen({ reloadKey }) {
   const [rows, setRows] = useState([]);
 
   const reload = useCallback(async () => {
-    setRows(await listStudents(db));
+    setRows(await liststudents(db));
   }, [db]);
 
   useEffect(() => {
@@ -18,7 +17,7 @@ export default function StudentListScreen({ reloadKey }) {
   }, [reload, reloadKey]);
 
   function handleClear() {
-    Alert.alert("ล้างข้อมูลทั้งหมด", "ลบผู้ลงทะเบียนทั้งหมดใช่ไหม", [
+    Alert.alert("ล้างข้อมูลทั้งหมด", "ลบผู้ลงทะเบียนทั้งหมดและกู้คืนไม่ได้", [
       { text: "ยกเลิก", style: "cancel" },
       {
         text: "ล้าง",
@@ -36,7 +35,10 @@ export default function StudentListScreen({ reloadKey }) {
     <FlatList
       data={rows}
       keyExtractor={(item) => String(item.id)}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={styles.container}
+      ListHeaderComponent={
+        <Text style={styles.summary}>ลงทะเบียนแล้ว {rows.length} คน</Text>
+      }
       renderItem={({ item }) => (
         <View style={styles.card}>
           <Text style={styles.cardName}>
@@ -45,22 +47,19 @@ export default function StudentListScreen({ reloadKey }) {
           <Text style={styles.cardLine}>รหัสนิสิต {item.student_id}</Text>
           <Text style={styles.cardLine}>ชื่อผู้ใช้ {item.username}</Text>
           <Text style={styles.hashLabel}>
-            ค่าย่อยรหัสผ่าน{" "}
-            <Text style={styles.hashValue}>{item.hash_preview}...</Text>
+            ค่าแฮชรหัสผ่าน{" "}
+            <Text style={styles.hashValue}>{item.hash_preview}</Text>
           </Text>
         </View>
       )}
       ListEmptyComponent={
         <Text style={styles.empty}>ยังไม่มีผู้ลงทะเบียน</Text>
       }
-      ListHeaderComponent={
+      ListFooterComponent={
         rows.length > 0 ? (
-          <View>
-            <Text style={styles.summary}>ลงทะเบียนแล้ว {rows.length} คน</Text>
-            <Pressable style={styles.clearButton} onPress={handleClear}>
-              <Text style={styles.clearButtonText}>ล้างข้อมูลทั้งหมด</Text>
-            </Pressable>
-          </View>
+          <Pressable style={styles.clearButton} onPress={handleClear}>
+            <Text style={styles.clearText}>ล้างข้อมูลทั้งหมด</Text>
+          </Pressable>
         ) : null
       }
     />
