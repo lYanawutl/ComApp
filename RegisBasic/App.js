@@ -35,7 +35,7 @@ export default function App() {
           </View>
 
           {tab === "register" ? (
-            <RegisterScreen onRegistered={() => reloadKey((k) => k + 1)} />
+            <RegisterScreen onRegistered={() => setReloadKey((k) => k + 1)} />
           ) : (
             <StudentListScreen reloadKey={reloadKey} />
           )}
