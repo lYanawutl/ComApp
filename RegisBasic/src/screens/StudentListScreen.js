@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList, Pressable, Alert } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 
-import { liststudents, clearStudents } from "../db/database";
+import { listStudents, clearStudents } from "../db/database";
 import { styles } from "../styles/studentListStyles";
 
 export default function StudentListScreen({ reloadKey }) {
@@ -10,7 +10,7 @@ export default function StudentListScreen({ reloadKey }) {
   const [rows, setRows] = useState([]);
 
   const reload = useCallback(async () => {
-    setRows(await liststudents(db));
+    setRows(await listStudents(db));
   }, [db]);
 
   useEffect(() => {

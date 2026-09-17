@@ -58,11 +58,11 @@ const RegisterScreen = ({ onRegistered }) => {
     setSaving(true);
 
     const result = await registerStudent(db, {
-      name: from.name.trim(),
-      surname: from.surname.trim(),
-      studentID: from.studentID.trim(),
-      username: from.username.trim(),
-      password: from.password.trim(),
+      name: form.name.trim(),
+      surname: form.surname.trim(),
+      studentID: form.studentID.trim(),
+      username: form.username.trim(),
+      password: form.password.trim(),
     });
 
     setSaving(false);
@@ -75,7 +75,8 @@ const RegisterScreen = ({ onRegistered }) => {
 
     setForm(EMPTY_FORM);
     setError({});
-    setSuccess(`ลงทะเบียนสำเร็จ หมายเลยในระบบคือ ${result.id}`);
+    setSuccess(`ลงทะเบียนสำเร็จ หมายเลขในระบบคือ ${result.id}`);
+    onRegistered?.();
   }
 
   return (

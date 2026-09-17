@@ -12,7 +12,7 @@ const Field = ({ label, hint, error, style, ...inputProops }) => {
         {...inputProops}
       />
       {error ? (
-        <Text style={styles.errorText}>{error} </Text>
+        <Text style={styles.errorText}>{error}</Text>
       ) : hint ? (
         <Text style={styles.hintText}>{hint}</Text>
       ) : null}
