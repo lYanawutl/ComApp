@@ -2,7 +2,7 @@ import * as Crypto from "expo-crypto";
 
 export const DATABASE_NAME = "register_basic.db";
 
-async function hasPassword(password, salt) {
+async function hashPassword(password, salt) {
   return await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     salt + password,
@@ -11,28 +11,32 @@ async function hasPassword(password, salt) {
 
 export async function initDB(db) {
   await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            surname TEXT NOT NULL,
-            student_id TEXT NOT NULL UNIQUE,
-            username TEXT NOT NULL UNIQUE,
-            password_salt TEXT NOT NULL,
-            password_hash TEXT NOT NULL,
-            create_at TEXT NOT NULL
-        );
-    `);
+    PRAGMA journal_mode = WAL;
+
+    CREATE TABLE IF NOT EXISTS students (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      surname TEXT NOT NULL,
+      student_id TEXT NOT NULL UNIQUE,
+      username TEXT NOT NULL UNIQUE,
+      password_salt TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
+  `);
 }
 
-export function liststudents(db) {
+export function listStudents(db) {
   return db.getAllAsync(
-    `SELECT id, name, surname, student_id, username, substr(password_hash, 1, 16) AS hash_review FROM students ORDER BY id DESC`,
+    `SELECT id, name, surname, student_id, username,
+            substr(password_hash, 1, 16) AS hash_preview
+     FROM students ORDER BY id DESC`,
   );
 }
 
 export async function findDuplicate(db, studentID, username) {
   const row = await db.getFirstAsync(
-    "SELECT student_id, username FROM students WHARE student_id = ? OR username = ?",
+    "SELECT student_id, username FROM students WHERE student_id = ? OR username = ?",
     [studentID, username],
   );
 
@@ -45,7 +49,7 @@ export async function registerStudent(
   db,
   { name, surname, studentID, username, password },
 ) {
-  const duplicate = await findDuplicate(db, studentID, surname);
+  const duplicate = await findDuplicate(db, studentID, username);
 
   if (duplicate === "studentID") {
     return {
@@ -59,26 +63,30 @@ export async function registerStudent(
     return {
       ok: false,
       field: "username",
-      message: "รหัสนิสิตนี้ลงทะเบียนไปแล้ว",
+      message: "ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว",
     };
   }
 
   const salt = Crypto.randomUUID();
-  const hash = await hasPassword(password, salt);
+  const hash = await hashPassword(password, salt);
 
   try {
-    const result = await db.runAsyn(
+    const result = await db.runAsync(
       `INSERT INTO students (
-      name,
-      surname,
-      student_id,
-      username,
-      password_sail,
-      password_hash,
-      create_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [name, surname, studentID, username, salt, hash, new Date().toISOString],
+        name, surname, student_id, username,
+        password_salt, password_hash, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        name,
+        surname,
+        studentID,
+        username,
+        salt,
+        hash,
+        new Date().toISOString(),
+      ],
     );
-    return { ok: true, id: result.lastInsertRowID };
+    return { ok: true, id: result.lastInsertRowId };
   } catch (e) {
     console.warn("registerStudent ล้มเหลว", e);
     return { ok: false, field: null, message: "บันทึกไม่สำเร็จ กรุณาลองใหม่" };
@@ -86,11 +94,11 @@ export async function registerStudent(
 }
 
 export async function countStudents(db) {
-  const row = await db.getFirstAsync('SELECT COUNT(*) AS n FROM students')
-  return row?.n ?? 0
+  const row = await db.getFirstAsync("SELECT COUNT(*) AS n FROM students");
+  return row?.n ?? 0;
 }
 
 export async function clearStudents(db) {
-  const result = await db.runAsyn('DELETE FROM students')
-  return result.changes
+  const result = await db.runAsync("DELETE FROM students");
+  return result.changes;
 }

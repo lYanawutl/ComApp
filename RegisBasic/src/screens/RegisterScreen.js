@@ -26,7 +26,7 @@ const EMPTY_FORM = {
   confirm: "",
 };
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ onRegistered }) => {
   const db = useSQLiteContext();
 
   const [form, setForm] = useState(EMPTY_FORM);
@@ -56,27 +56,26 @@ const RegisterScreen = () => {
     }
 
     setSaving(true);
-    
+
     const result = await registerStudent(db, {
       name: from.name.trim(),
       surname: from.surname.trim(),
       studentID: from.studentID.trim(),
       username: from.username.trim(),
       password: from.password.trim(),
-    })
+    });
 
-    setSaving(false)
+    setSaving(false);
 
     if (!result.ok) {
-      if (result.field) setError({ [result.field]: result.message })
-      else Alert.alert('ผิดพลาด', result.message)
-      return
+      if (result.field) setError({ [result.field]: result.message });
+      else Alert.alert("ผิดพลาด", result.message);
+      return;
     }
 
-    setForm(EMPTY_FORM)
-    setError({})
-    setSuccess(`ลงทะเบียนสำเร็จ หมายเลยในระบบคือ ${result.id}`)
-    
+    setForm(EMPTY_FORM);
+    setError({});
+    setSuccess(`ลงทะเบียนสำเร็จ หมายเลยในระบบคือ ${result.id}`);
   }
 
   return (
