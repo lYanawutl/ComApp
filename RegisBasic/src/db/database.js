@@ -1,4 +1,13 @@
+import * as Crypto from "expo-crypto";
+
 export const DATABASE_NAME = "register_basic.db";
+
+async function hasPassword(password, salt) {
+  return await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    salt + password,
+  );
+}
 
 export async function initDB(db) {
   await db.execAsync(`
@@ -19,4 +28,69 @@ export function liststudents(db) {
   return db.getAllAsync(
     `SELECT id, name, surname, student_id, username, substr(password_hash, 1, 16) AS hash_review FROM students ORDER BY id DESC`,
   );
+}
+
+export async function findDuplicate(db, studentID, username) {
+  const row = await db.getFirstAsync(
+    "SELECT student_id, username FROM students WHARE student_id = ? OR username = ?",
+    [studentID, username],
+  );
+
+  if (!row) return null;
+  if (row.student_id === studentID) return "studentID";
+  return "username";
+}
+
+export async function registerStudent(
+  db,
+  { name, surname, studentID, username, password },
+) {
+  const duplicate = await findDuplicate(db, studentID, surname);
+
+  if (duplicate === "studentID") {
+    return {
+      ok: false,
+      field: "studentID",
+      message: "รหัสนิสิตนี้ลงทะเบียนไปแล้ว",
+    };
+  }
+
+  if (duplicate === "username") {
+    return {
+      ok: false,
+      field: "username",
+      message: "รหัสนิสิตนี้ลงทะเบียนไปแล้ว",
+    };
+  }
+
+  const salt = Crypto.randomUUID();
+  const hash = await hasPassword(password, salt);
+
+  try {
+    const result = await db.runAsyn(
+      `INSERT INTO students (
+      name,
+      surname,
+      student_id,
+      username,
+      password_sail,
+      password_hash,
+      create_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [name, surname, studentID, username, salt, hash, new Date().toISOString],
+    );
+    return { ok: true, id: result.lastInsertRowID };
+  } catch (e) {
+    console.warn("registerStudent ล้มเหลว", e);
+    return { ok: false, field: null, message: "บันทึกไม่สำเร็จ กรุณาลองใหม่" };
+  }
+}
+
+export async function countStudents(db) {
+  const row = await db.getFirstAsync('SELECT COUNT(*) AS n FROM students')
+  return row?.n ?? 0
+}
+
+export async function clearStudents(db) {
+  const result = await db.runAsyn('DELETE FROM students')
+  return result.changes
 }

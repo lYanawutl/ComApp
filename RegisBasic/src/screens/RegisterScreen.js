@@ -14,6 +14,8 @@ import { useSQLiteContext } from "expo-sqlite";
 import { styles } from "../styles/registerStyles";
 import { colors } from "../styles/theme";
 import Field from "../components/Field";
+import { validateFrom, hasErrors } from "../utils/validate";
+import { registerStudent } from "../db/database";
 
 const EMPTY_FORM = {
   name: "",
@@ -44,8 +46,37 @@ const RegisterScreen = () => {
     }
   }
 
-  async function headleSubmit() {
-    console.log("cacacaccd", form);
+  async function handleSubmit() {
+    setSuccess("");
+
+    const found = validateFrom(form);
+    if (hasErrors(found)) {
+      setError(found);
+      return;
+    }
+
+    setSaving(true);
+    
+    const result = await registerStudent(db, {
+      name: from.name.trim(),
+      surname: from.surname.trim(),
+      studentID: from.studentID.trim(),
+      username: from.username.trim(),
+      password: from.password.trim(),
+    })
+
+    setSaving(false)
+
+    if (!result.ok) {
+      if (result.field) setError({ [result.field]: result.message })
+      else Alert.alert('ผิดพลาด', result.message)
+      return
+    }
+
+    setForm(EMPTY_FORM)
+    setError({})
+    setSuccess(`ลงทะเบียนสำเร็จ หมายเลยในระบบคือ ${result.id}`)
+    
   }
 
   return (
@@ -90,7 +121,7 @@ const RegisterScreen = () => {
           error={error.studentID}
           placeholder="6721651254"
           keyboardType="number-pad"
-          maxlength={10}
+          maxLength={10}
         />
         <Field
           label="ชื่อผู้ใช้"
@@ -100,7 +131,7 @@ const RegisterScreen = () => {
           placeholder="somchi"
           hint="ห้ามซ้ำกับผู้ใช้คนอื่น"
           autoCapitalize="none"
-          maxlength={20}
+          maxLength={20}
         />
         <Field
           label="รหัสผ่าน"
@@ -108,7 +139,7 @@ const RegisterScreen = () => {
           value={form.password}
           onChangeText={(v) => setField("password", v)}
           error={error.password}
-          placeholder="อย่า่งน้อย 8 ตัวอักษร"
+          placeholder="อย่างน้อย 8 ตัวอักษร"
           secureTextEntry
           autoCapitalize="none"
         />
@@ -121,7 +152,10 @@ const RegisterScreen = () => {
           secureTextEntry
           autoCapitalize="none"
         />
-        <Pressable style={[styles.submit, saving && styles.submitDisabled]}>
+        <Pressable
+          style={[styles.submit, saving && styles.submitDisabled]}
+          onPress={handleSubmit}
+        >
           <Text style={styles.submitText}>
             {saving ? "กำลังบันทึก" : "ลงทะเบียน"}
           </Text>
