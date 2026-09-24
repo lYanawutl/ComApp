@@ -6,7 +6,6 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import StudentListScreen from "./src/screens/StudentListScreen";
 import { styles } from "./src/styles/appStyles";
 
-// App มีแค่ SQLiteProvider ไม่มี state
 export default function App() {
   return (
     <SQLiteProvider databaseName={DATABASE_NAME} onInit={initDB}>
@@ -16,7 +15,6 @@ export default function App() {
   );
 }
 
-// state ทั้งหมดอยู่ที่นี่ กดแท็บแล้วจะ render ใหม่แค่ส่วนนี้
 function Main() {
   const [tab, setTab] = useState("register");
   const [reloadKey, setReloadKey] = useState(0);
