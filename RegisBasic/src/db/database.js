@@ -100,3 +100,38 @@ export async function clearStudents(db) {
   const result = await db.runAsync("DELETE FROM students");
   return result.changes;
 }
+
+export async function loginStudent(db, username, password) {
+  const row = await db.getFirstAsync(
+    `SELECT id, name, surname, student_id, username, password_salt, password_hash
+     FROM students
+     WHERE username = ?`,[username]
+  )
+
+  const fail = {ok: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'}
+  if (!row) { 
+    return fail
+  }
+    const hash = await hashPassword(password, row.password_salt)
+  if (hash !== row.password_hash) {
+      return fail
+  }
+  return {
+    ok: true,
+    user: {
+      id: row.id,
+      name: row.name,
+      surname: row.surname,
+      student_id: row.student_id,
+      username: row.username
+    }
+  }
+} 
+
+export function getStudentById(db, id){
+  return db.getFirstAsync(
+    `SELECT id, name, surname, student_id, username, create_at
+    FROM students
+    WHERE id = ?`,[id]
+  )
+}
